@@ -1,0 +1,361 @@
+Step 1:
+- Copy app/Http/Controllers/Auth folder and past it and named it Admin. Change the namespace Admin/ForgotPasswordController.php, Admin/LoginController.php, ... Admin/ResetPassword.php to 
+	- namespace App\Http\Controllers\Admin;
+	- namespace App\Http\Controllers\Admin;
+	- namespace App\Http\Controllers\Admin;
+	- namespace App\Http\Controllers\Admin;
+
+
+
+
+Step 2: 
+- Copy resources/views/auth folder content, create a folder resources/views/admin and past the content and modify it to...
+ 	
+	-  resources/views/admin/login.blade.php
+	 	@extends('layouts.app')
+
+		@section('content')
+		<div class="container">
+		    <div class="row">
+		        <div class="col-md-8 col-md-offset-2">
+		            <div class="panel panel-default">
+		                <div class="panel-heading">Admin Login</div>
+
+		                <div class="panel-body">
+		                    <form class="form-horizontal" method="POST" action="{{ route('admin.login') }}">
+		                        {{ csrf_field() }}
+
+		                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+		                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+
+		                            <div class="col-md-6">
+		                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
+
+		                                @if ($errors->has('email'))
+		                                    <span class="help-block">
+		                                        <strong>{{ $errors->first('email') }}</strong>
+		                                    </span>
+		                                @endif
+		                            </div>
+		                        </div>
+
+		                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+		                            <label for="password" class="col-md-4 control-label">Password</label>
+
+		                            <div class="col-md-6">
+		                                <input id="password" type="password" class="form-control" name="password" required>
+
+		                                @if ($errors->has('password'))
+		                                    <span class="help-block">
+		                                        <strong>{{ $errors->first('password') }}</strong>
+		                                    </span>
+		                                @endif
+		                            </div>
+		                        </div>
+
+		                        <div class="form-group">
+		                            <div class="col-md-6 col-md-offset-4">
+		                                <div class="checkbox">
+		                                    <label>
+		                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+		                                    </label>
+		                                </div>
+		                            </div>
+		                        </div>
+
+		                        <div class="form-group">
+		                            <div class="col-md-8 col-md-offset-4">
+		                                <button type="submit" class="btn btn-primary">
+		                                    Login
+		                                </button>
+
+		                                <a class="btn btn-link" href="{{ route('admin.password.request') }}">
+		                                    Forgot Your Password?
+		                                </a>
+		                            </div>
+		                        </div>
+		                    </form>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		@endsection
+
+	-  resources/views/admin/passwords/email.blade.php
+
+		@extends('layouts.app')
+
+		@section('content')
+		<div class="container">
+		    <div class="row">
+		        <div class="col-md-8 col-md-offset-2">
+		            <div class="panel panel-default">
+		                <div class="panel-heading">Admin Reset Password</div>
+
+		                <div class="panel-body">
+		                    @if (session('status'))
+		                        <div class="alert alert-success">
+		                            {{ session('status') }}
+		                        </div>
+		                    @endif
+
+		                    <form class="form-horizontal" method="POST" action="{{ route('admin.password.email') }}">
+		                        {{ csrf_field() }}
+
+		                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+		                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+
+		                            <div class="col-md-6">
+		                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+
+		                                @if ($errors->has('email'))
+		                                    <span class="help-block">
+		                                        <strong>{{ $errors->first('email') }}</strong>
+		                                    </span>
+		                                @endif
+		                            </div>
+		                        </div>
+
+		                        <div class="form-group">
+		                            <div class="col-md-6 col-md-offset-4">
+		                                <button type="submit" class="btn btn-primary">
+		                                    Send Password Reset Link
+		                                </button>
+		                            </div>
+		                        </div>
+		                    </form>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		@endsection
+
+
+	- resources/views/admin/passwords/reset.blade.php
+		@extends('layouts.app')
+
+		@section('content')
+		<div class="container">
+		    <div class="row">
+		        <div class="col-md-8 col-md-offset-2">
+		            <div class="panel panel-default">
+		                <div class="panel-heading">Admin Reset Password</div>
+
+		                <div class="panel-body">
+		                    <form class="form-horizontal" method="POST" action="{{ route('admin.password.request') }}">
+		                        {{ csrf_field() }}
+
+		                        <input type="hidden" name="token" value="{{ $token }}">
+
+		                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+		                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+
+		                            <div class="col-md-6">
+		                                <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}" required autofocus>
+
+		                                @if ($errors->has('email'))
+		                                    <span class="help-block">
+		                                        <strong>{{ $errors->first('email') }}</strong>
+		                                    </span>
+		                                @endif
+		                            </div>
+		                        </div>
+
+		                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+		                            <label for="password" class="col-md-4 control-label">Password</label>
+
+		                            <div class="col-md-6">
+		                                <input id="password" type="password" class="form-control" name="password" required>
+
+		                                @if ($errors->has('password'))
+		                                    <span class="help-block">
+		                                        <strong>{{ $errors->first('password') }}</strong>
+		                                    </span>
+		                                @endif
+		                            </div>
+		                        </div>
+
+		                        <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+		                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
+		                            <div class="col-md-6">
+		                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+
+		                                @if ($errors->has('password_confirmation'))
+		                                    <span class="help-block">
+		                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
+		                                    </span>
+		                                @endif
+		                            </div>
+		                        </div>
+
+		                        <div class="form-group">
+		                            <div class="col-md-6 col-md-offset-4">
+		                                <button type="submit" class="btn btn-primary">
+		                                    Reset Password
+		                                </button>
+		                            </div>
+		                        </div>
+		                    </form>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		@endsection
+
+
+	- Create a Home page in resources/views/admin/home.blade.php
+		@extends('layouts.app')
+
+		@section('content')
+		<div class="container">
+		    <div class="row">
+		        <div class="col-md-8 col-md-offset-2">
+		            <div class="panel panel-default">
+		                <div class="panel-heading">Admin Dashboard</div>
+
+		                <div class="panel-body">
+		                    @if (session('status'))
+		                        <div class="alert alert-success">
+		                            {{ session('status') }}
+		                        </div>
+		                    @endif
+
+		                    You are logged in as Admin!
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		@endsection
+
+
+Step 3:
+- Run Command: php artisan route:list
+- Copy the GET|HEAD | login | login to App\Http\Controllers\ResetPasswordController@showResetForm and edit it 
+- Web.php
+	// For Admin
+	Route::get('admin/home', 'AdminController@index');
+	Route::get('admin', 'Admin\LoginController@showLoginForm')->name('admin.login');
+	Route::post('admin', 'Admin\LoginController@login');
+	Route::post('admin-password/email', 'Admin\ForgotPasswordController@sendResetLinkEmail')->name('admin.password.email');
+	Route::get('admin-password/reset', 'Admin\ForgotPasswordController@showLinkRequestForm')->name('admin.password.request');
+	Route::post('admin-password/reset', 'Admin\ResetPasswordController@reset');
+	Route::get('admin-password/reset/{token}', 'Admin\ResetPasswordController@showResetForm')->name('admin.password.reset');
+	//
+
+Step 4:
+- Then Copy HomeController.php and create AdminController.php . and past the information
+- 
+	<?php
+
+	namespace App\Http\Controllers;
+
+	use Illuminate\Http\Request;
+
+	class AdminController extends Controller
+	{
+	    /**
+	     * Create a new controller instance.
+	     *
+	     * @return void
+	     */
+	    public function __construct()
+	    {
+	         $this->middleware('auth:admin');
+	    }
+
+	    /**
+	     * Show the application dashboard.
+	     *
+	     * @return \Illuminate\Http\Response
+	     */
+	    public function index()
+	    {
+	        return view('admin.home');
+	    }
+	}
+
+
+
+
+
+Step 5:
+- Then go to config/auth.php and edit this to 
+
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
+
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'users',
+        ],
+    ],
+
+
+
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\User::class,
+        ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Admin::class,
+        ],
+
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
+    ],
+
+
+
+
+    'passwords' => [
+        'users' => [
+            'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+
+
+        'admins' => [
+            'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+    ],
+
+
+
+Step 6:
+- Create app/Admin.php and Copy all information in  app/User.php and past it to app/Admin.php
+
+
+Step 7:
+- Create Table name Admins
+- Run: php artisan make:migrate createAdminTable --create=Admins
+- 
+	$table->increments('id');
+    $table->string('name');
+    $table->string('email',100)->unique();
+    $table->string('password');
+    $table->rememberToken();
+    $table->timestamps();
+
+
+- Run: php artisan migrate

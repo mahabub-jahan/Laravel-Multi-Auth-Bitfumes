@@ -30,3 +30,13 @@ Route::get('admin-password/reset', 'Admin\ForgotPasswordController@showLinkReque
 Route::post('admin-password/reset', 'Admin\ResetPasswordController@reset');
 Route::get('admin-password/reset/{token}', 'Admin\ResetPasswordController@showResetForm')->name('admin.password.reset');
 //
+
+// For Restaurant
+Route::get('restaurant/home', 'RestaurantController@index');
+Route::get('restaurant', 'Restaurant\LoginController@showLoginForm')->name('restaurant.login');
+Route::post('restaurant', 'Restaurant\LoginController@login');
+Route::post('restaurant-password/email', 'Restaurant\ForgotPasswordController@sendResetLinkEmail')->name('restaurant.password.email');
+Route::get('restaurant-password/reset', 'Restaurant\ForgotPasswordController@showLinkRequestForm')->name('restaurant.password.request');
+Route::post('restaurant-password/reset', 'Restaurant\ResetPasswordController@reset');
+Route::get('restaurant-password/reset/{token}', 'Restaurant\ResetPasswordController@showResetForm')->name('restaurant.password.reset');
+//

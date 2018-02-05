@@ -47,6 +47,12 @@ return [
         ],
 
 
+        'restaurant' => [
+            'driver' => 'session',
+            'provider' => 'restaurants',
+        ],
+
+
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
@@ -81,6 +87,11 @@ return [
             'model' => App\Admin::class,
         ],
 
+        'restaurants' => [
+            'driver' => 'eloquent',
+            'model' => App\Restaurant::class,
+        ],
+
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -112,6 +123,12 @@ return [
 
         'admins' => [
             'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+
+        'restaurants' => [
+            'provider' => 'restaurants',
             'table' => 'password_resets',
             'expire' => 60,
         ],
